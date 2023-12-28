@@ -1,0 +1,113 @@
+############### Blackjack Project #####################
+
+import random
+
+############### Our Blackjack House Rules #####################
+
+## The deck is unlimited in size.
+## There are no jokers.
+## The Jack/Queen/King all count as 10.
+## The the Ace can count as 11 or 1.
+## Use the following list as the deck of cards:
+## cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+## The cards in the list have equal probability of being drawn.
+## Cards are not removed from the deck as they are drawn.
+## The computer is the dealer.
+
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
+player_cards = []
+computer_cards = []
+player_pts = 0
+computer_pts = 0
+playing = True
+
+def is_player_ace(player_cards_ace, player_pts_ace):
+    index = player_cards_ace.index(11)
+    player_cards_ace[index] = 1
+    player_pts_ace = player_pts_ace - 10
+    return player_cards_ace, player_pts_ace
+
+def is_computer_ace(computer_cards_ace, computer_pts_ace):
+    index = computer_cards_ace.index(11)
+    computer_cards_ace[index] = 1
+    computer_pts_ace = computer_pts_ace - 10
+    return computer_cards_ace, computer_pts_ace
+
+for i in range(2):
+    player_cards.append(random.randint(2, 11))
+    computer_cards.append(random.randint(2, 11))
+    player_pts += player_cards[i]
+    computer_pts += computer_cards[i]
+print(f"Your cards: {player_cards}")
+
+while playing == True:
+    if player_pts == 21 and computer_pts < 21:
+        print("Player won")
+        break
+    elif player_pts != 21 and computer_pts == 21:
+        print("Computer won")
+        break
+
+    if player_pts > 21 and cards[0] in player_cards:
+        player_result = is_player_ace(player_cards, player_pts)
+        player_cards = player_result[0]
+        player_pts = player_result[1]
+
+    if computer_pts > 21 and cards[0] in computer_cards:
+        computer_result = is_computer_ace(computer_cards, computer_pts)
+        computer_cards = computer_result[0]
+        computer_pts = computer_result[1]
+
+    print(f"Computer's first card is {computer_cards[0]}")
+
+    if player_pts > 21 or computer_pts == 21:
+        print("Computer won")
+
+    another_card = 'yes'
+    while another_card == 'yes':
+        another_card = input("Would you like to get another card? Type 'yes' or 'no' ")
+
+        if another_card == 'yes':
+            player_cards.append(random.randint(2, 11))
+            player_pts += player_cards[len(player_cards)-1]
+
+            if player_pts > 21 and cards[0] in player_cards:
+                player_result = is_player_ace(player_cards, player_pts)
+                player_cards = player_result[0]
+                player_pts = player_result[1]
+            elif player_pts > 21:
+                break
+            elif player_pts == 21:
+                another_card == 'no'
+            print(f"Player's cards: {player_cards}")
+            print(f"Player's pts: {player_pts}")
+
+
+        elif another_card == 'no':
+            print(f"Computer's cards: {computer_cards}")
+            while computer_pts <= 16:
+                computer_cards.append(random.randint(2, 11))
+                computer_pts += computer_cards[len(computer_cards) - 1]
+
+                if computer_pts > 21 and cards[0] in computer_cards:
+                    computer_result = is_computer_ace(computer_cards, computer_pts)
+                    computer_cards = computer_result[0]
+                    computer_pts = computer_result[1]
+
+    playing = False
+
+print(f"Computer's cards: {computer_cards}")
+print(f"Player's pts: {player_pts}")
+print(f"Computer's pts: {computer_pts}")
+
+if player_pts > 21:
+    print("Computer won")
+elif player_pts == 21 != computer_pts:
+    print("Player won")
+elif player_pts < computer_pts <= 21:
+    print("Computer won")
+elif player_pts == computer_pts:
+    print("Draw")
+else:
+    print("error")
